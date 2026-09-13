@@ -217,11 +217,36 @@ def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+SCHEMA_PATH = BASE_DIR / "sql" / "01_schema.sql"
+
+
+def apply_schema(engine, schema_path=SCHEMA_PATH):
+    """
+    Apply the DDL in sql/01_schema.sql. Safe to re-run: the script starts
+    with DROP TABLE IF EXISTS for every table, so each run starts from a
+    clean schema. Comments are stripped before splitting on ';', since a
+    semicolon used as ordinary punctuation inside a comment would
+    otherwise be mistaken for a statement terminator.
+    """
+    schema_sql = schema_path.read_text()
+    lines = [
+        line for line in schema_sql.split("\n")
+        if line.strip() and not line.strip().startswith("--")
+    ]
+    statements = [s.strip() for s in "\n".join(lines).split(";")]
+    with engine.begin() as conn:
+        for stmt in statements:
+            if stmt:
+                conn.execute(text(stmt))
+
+
 # ---------------------------------------------------------------------
 # LOAD
 # ---------------------------------------------------------------------
 def load_to_mysql(machine_type, machines, sensor_readings, failure_mode,
                    failure_events, maintenance_events, engine):
+    apply_schema(engine)
+
     with engine.begin() as conn:
         conn.execute(text("SET FOREIGN_KEY_CHECKS=0"))
         conn.execute(text("TRUNCATE TABLE maintenance_events"))
