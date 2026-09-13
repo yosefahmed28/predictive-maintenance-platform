@@ -1,0 +1,40 @@
+{
+  "model_name": "Random Forest (hyperparameter-tuned)",
+  "best_params": {
+    "n_estimators": 400,
+    "min_samples_split": 2,
+    "min_samples_leaf": 1,
+    "max_features": null,
+    "max_depth": 6
+  },
+  "threshold": 0.5,
+  "feature_names": [
+    "num__Air temperature [K]",
+    "num__Process temperature [K]",
+    "num__Rotational speed [rpm]",
+    "num__Torque [Nm]",
+    "num__Tool wear [min]",
+    "num__temp_diff_K",
+    "num__power_W",
+    "num__torque_x_toolwear",
+    "num__speed_torque_ratio",
+    "num__air_temp_z_within_type",
+    "cat_onehot__Type_H",
+    "cat_onehot__Type_L",
+    "cat_onehot__Type_M",
+    "cat_ordinal__tool_wear_bucket"
+  ],
+  "val_metrics": {
+    "model": "Random Forest (hyperparameter-tuned)",
+    "threshold": 0.5,
+    "precision": 0.9333333333333333,
+    "recall": 0.8235294117647058,
+    "f1": 0.875,
+    "pr_auc": 0.9307405369104367,
+    "false_negative_rate": 0.17647058823529413,
+    "tn": "1446",
+    "fp": "3",
+    "fn": "9",
+    "tp": "42"
+  }
+}
