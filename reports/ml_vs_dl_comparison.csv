@@ -1,0 +1,4 @@
+Modeling Paradigm,Model Architecture,Threshold,Precision,Recall,F1-Score,PR-AUC,False Negative Rate,TN,FP,FN,TP
+Classical ML,Random Forest (hyperparameter-tuned),0.5,0.9333,0.8235,0.875,0.9307,0.1765,1446,3,9,42
+Supervised DL,Tuned Tabular MLP,0.5,0.6667,0.7843,0.7207,0.8418,0.2157,1429,20,11,40
+Unsupervised DL,Feature-Weighted Autoencoder,0.6541,0.1783,0.451,0.2556,0.1618,0.549,1343,106,28,23
