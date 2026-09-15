@@ -1,6 +1,6 @@
 """
-Simple smoke tests to confirm the middleware layer (loaders) works
-correctly, whether using mock or real components.
+Smoke tests for the middleware layer (app/loaders.py), whether it ends
+up using real artifacts or falls back to mocks.
 
 Run:
     pytest tests/test_app_smoke.py -v
@@ -13,43 +13,51 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "app"))
 
 import pandas as pd
 from loaders import (
-    get_feature_columns,
+    get_raw_input_columns,
     load_classical_model,
     load_clean_data,
+    score_raw_dataframe,
     explain_prediction,
 )
 
 
-def test_feature_columns_not_empty():
-    cols = get_feature_columns()
+def _sample_raw_row():
+    return pd.DataFrame([{
+        "Type": "M",
+        "Air temperature [K]": 298.1,
+        "Process temperature [K]": 308.6,
+        "Rotational speed [rpm]": 1551,
+        "Torque [Nm]": 42.8,
+        "Tool wear [min]": 0,
+    }])
+
+
+def test_raw_input_columns_not_empty():
+    cols = get_raw_input_columns()
     assert isinstance(cols, list)
     assert len(cols) > 0
 
 
-def test_classical_model_predicts():
-    model, _ = load_classical_model()
+def test_classical_model_loads():
+    model, is_mock = load_classical_model()
+    assert model is not None
+    assert isinstance(is_mock, bool)
+
+
+def test_clean_data_loads_with_expected_columns():
     df = load_clean_data()
-    cols = [c for c in get_feature_columns() if c in df.columns]
-    assert len(cols) > 0, "No feature columns match the data"
-
-    proba = model.predict_proba(df[cols])
-    assert proba.shape[0] == len(df)
-    assert proba.shape[1] == 2
-    assert ((proba >= 0) & (proba <= 1)).all()
-
-
-def test_clean_data_has_machine_id():
-    df = load_clean_data()
-    assert "machine_id" in df.columns
     assert len(df) > 0
+    assert "machine_id" in df.columns
 
 
-def test_explain_returns_expected_keys():
-    model, _ = load_classical_model()
-    df = load_clean_data()
-    cols = [c for c in get_feature_columns() if c in df.columns]
-    row = df[cols].iloc[[0]]
+def test_score_raw_dataframe_returns_probability():
+    result = score_raw_dataframe(_sample_raw_row())
+    assert "failure_probability" in result.columns
+    assert "predicted_failure" in result.columns
+    assert 0.0 <= result["failure_probability"].iloc[0] <= 1.0
 
-    result = explain_prediction(model, row)
-    assert "top_features" in result
-    assert isinstance(result["top_features"], list)
+
+def test_explain_prediction_returns_top_features():
+    explanation = explain_prediction(_sample_raw_row())
+    assert "top_features" in explanation
+    assert len(explanation["top_features"]) > 0
