@@ -30,6 +30,12 @@ import numpy as np
 import pandas as pd
 import joblib
 
+from pathlib import Path
+import sys
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.append(str(PROJECT_ROOT))
+
 from src.features import engineer_features
 
 # ---------------------------------------------------------------------------
