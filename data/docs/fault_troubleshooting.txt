@@ -1,0 +1,5 @@
+Error Code HDF (Heat Dissipation Failure): Occurs when process temperature exceeds ambient by 8.6K and rotational speed < 1380 rpm. 
+Action: Inspect cooling fan filters, replace thermal grease, and verify coolant circulation pumps.
+
+Error Code PWF (Power Failure): Occurs when power (Torque x Speed) is < 3500W or > 90000W. 
+Action: Inspect electrical drives, check voltage regulators, and recalibrate drive torque limits.

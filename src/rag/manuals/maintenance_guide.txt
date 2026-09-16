@@ -1,0 +1,13 @@
+INDUSTRIAL MAINTENANCE PROTOCOLS (AUTOMATED DIAGNOSIS GUIDE)
+
+[OVERHEATING / TEMPERATURE RISK]
+- Primary Cause: High friction, inadequate lubrication, or cooling fan degradation.
+- Action: Inspect coolant flow lines, top off synthetic grease (Grade ISO VG 320), and reduce spindle load by 15%.
+
+[BEARING / VIBRATION / TORQUE RISK]
+- Primary Cause: Mechanical misalignment or gear tooth fatigue.
+- Action: Perform laser alignment on drive shaft, check torque tolerances, and inspect drive belt tension.
+
+[TOOL WEAR WARNING (> 200 units)]
+- Primary Cause: Extended operation past duty cycle.
+- Action: Immediately schedule tool head replacement during next scheduled downtime window.

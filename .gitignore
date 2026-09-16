@@ -4,3 +4,8 @@ __pycache__/
 .envmlflow.db 
 mlruns/ 
 mlflow.db
+# Exclude model weights & local vectorstores
+*.gguf
+Modelfile
+vectorstore/
+chroma_db/
