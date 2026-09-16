@@ -253,7 +253,7 @@ def build_pipeline_splits(
 if __name__ == "__main__":
     import sys
 
-    csv_path = sys.argv[1] if len(sys.argv) > 1 else "ai4i2020.csv"
+    csv_path = sys.argv[1] if len(sys.argv) > 1 else "data/ai4i2020_raw.csv"
     splits = build_pipeline_splits(csv_path)
 
     for name in ["train", "val", "test"]:
