@@ -232,10 +232,16 @@ def explain_prediction(input_row_raw: pd.DataFrame, top_n: int = 5) -> dict:
         # src/xai_utils.py's prepare_features() should really do this itself,
         # since generate_shap_plots() has the same bug.
         ord_col = "cat_ordinal__tool_wear_bucket"
-        if ord_col in X_named.columns and X_named[ord_col].dtype == object:
+        if ord_col in X_named.columns and not pd.api.types.is_numeric_dtype(X_named[ord_col]):
+            # pd.cut(..., labels=...) in src/features.py returns a 'category'
+            # dtype column, not 'object' — so the old `dtype == object` check
+            # here never matched and this mapping never ran. Catch any
+            # non-numeric dtype (object OR category) instead.
             from src.features import TOOL_WEAR_LABELS
             label_to_code = {label: i for i, label in enumerate(TOOL_WEAR_LABELS)}
-            X_named[ord_col] = X_named[ord_col].map(label_to_code).fillna(-1).astype(int)
+            X_named[ord_col] = (
+                X_named[ord_col].astype(str).map(label_to_code).fillna(-1).astype(int)
+            )
 
         explainer = shap.TreeExplainer(model)
         shap_vals = explainer.shap_values(X_named.values, check_additivity=False)
@@ -288,3 +294,4 @@ class _MockAutoencoder:
 
     def predict(self, X, verbose=0):
         return X
+        
